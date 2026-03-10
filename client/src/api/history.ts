@@ -24,6 +24,10 @@ export function removeFavorite(id: string) {
   return request.delete(`/favorite/${id}`);
 }
 
+export function deleteHistory(id: string) {
+  return request.delete(`/history/${id}`);
+}
+
 export function getPresets() {
   return request.get<any, { code: number; data: PresetItem[] }>('/presets');
 }

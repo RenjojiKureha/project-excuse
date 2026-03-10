@@ -16,10 +16,17 @@
         class="history-item"
         @click="onItemClick(item)"
       >
-        <p class="history-input">{{ item.input.content }}</p>
-        <p class="history-meta">
-          {{ item.results.length }} 个借口 · {{ formatTime(item.createdAt) }}
-        </p>
+        <div class="history-content">
+          <p class="history-input">{{ item.input.content }}</p>
+          <p class="history-meta">
+            {{ item.results.length }} 个借口 · {{ formatTime(item.createdAt) }}
+          </p>
+        </div>
+        <van-icon
+          name="delete-o"
+          class="history-delete"
+          @click.stop="onDelete(item)"
+        />
       </div>
     </van-list>
 
@@ -32,6 +39,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useHistoryStore } from '../stores/history';
 import { useExcuseStore } from '../stores/excuse';
+import { showConfirmDialog, showToast } from 'vant';
 import type { HistoryItem } from '../types';
 
 const router = useRouter();
@@ -65,6 +73,16 @@ function onItemClick(item: HistoryItem) {
   router.push(`/result/${item.requestId}`);
 }
 
+async function onDelete(item: HistoryItem) {
+  try {
+    await showConfirmDialog({ title: '确认删除', message: '删除后不可恢复' });
+    await historyStore.deleteHistory(item._id);
+    showToast('已删除');
+  } catch {
+    // 用户取消
+  }
+}
+
 function formatTime(dateStr: string): string {
   const date = new Date(dateStr);
   const now = new Date();
@@ -79,10 +97,20 @@ function formatTime(dateStr: string): string {
 <style scoped>
 .history-page { padding: 0 0 16px; }
 .history-item {
+  display: flex;
+  align-items: center;
   padding: 14px 16px;
   background: var(--color-card);
   margin: 8px 16px;
   border-radius: 10px;
+}
+.history-content { flex: 1; min-width: 0; }
+.history-delete {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--color-text-muted);
+  margin-left: 12px;
+  padding: 4px;
 }
 .history-input { font-size: 15px; color: var(--color-text); }
 .history-meta {

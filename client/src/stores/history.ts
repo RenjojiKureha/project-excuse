@@ -53,8 +53,14 @@ export const useHistoryStore = defineStore('history', () => {
     favoriteTotal.value--;
   }
 
+  async function deleteHistory(id: string) {
+    await historyApi.deleteHistory(id);
+    historyList.value = historyList.value.filter((h) => h._id !== id);
+    historyTotal.value--;
+  }
+
   return {
     historyList, historyTotal, favoriteList, favoriteTotal, loading,
-    fetchHistory, fetchFavorites, addFavorite, removeFavorite,
+    fetchHistory, fetchFavorites, addFavorite, removeFavorite, deleteHistory,
   };
 });
