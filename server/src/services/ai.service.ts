@@ -15,47 +15,67 @@ export interface AICallResult {
 }
 
 export async function callAI(userPrompt: string): Promise<AICallResult> {
-  const response = await client.chat.completions.create({
-    model: config.ai.model,
-    messages: [
-      { role: 'system', content: getSystemPrompt() },
-      { role: 'user', content: userPrompt },
-    ],
-    temperature: 0.9,
-    response_format: { type: 'json_object' },
-  });
+  console.log('[AI] Calling model:', config.ai.model, 'at', config.ai.baseUrl);
 
-  const raw = response.choices[0]?.message?.content || '';
-  const parsed = parseAIResponse(raw);
+  try {
+    const response = await client.chat.completions.create({
+      model: config.ai.model,
+      messages: [
+        { role: 'system', content: getSystemPrompt() },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 0.9,
+    });
 
-  return {
-    data: parsed,
-    promptTokens: response.usage?.prompt_tokens || 0,
-    completionTokens: response.usage?.completion_tokens || 0,
-  };
+    const raw = response.choices[0]?.message?.content || '';
+    console.log('[AI] Raw response (first 500 chars):', raw.substring(0, 500));
+
+    const parsed = parseAIResponse(raw);
+    console.log('[AI] Parsed excuses count:', parsed.excuses.length);
+
+    return {
+      data: parsed,
+      promptTokens: response.usage?.prompt_tokens || 0,
+      completionTokens: response.usage?.completion_tokens || 0,
+    };
+  } catch (error: any) {
+    console.error('[AI] API call failed:', error.status, error.message);
+    console.error('[AI] Error details:', JSON.stringify(error.error || error.body || {}, null, 2));
+    throw error;
+  }
 }
 
 function parseAIResponse(raw: string): AIResponse {
+  // 去掉 markdown 代码块标记 (```json ... ``` 或 ``` ... ```)
+  let cleaned = raw.trim();
+  if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');
+  }
+
   // 尝试直接解析
   try {
-    const json = JSON.parse(raw);
+    const json = JSON.parse(cleaned);
     if (json.excuses && Array.isArray(json.excuses)) {
       return filterUnsafeContent(json as AIResponse);
     }
-  } catch {
-    // 尝试从文本中提取 JSON
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (match) {
-      try {
-        const json = JSON.parse(match[0]);
-        if (json.excuses && Array.isArray(json.excuses)) {
-          return filterUnsafeContent(json as AIResponse);
-        }
-      } catch {
-        // fall through to fallback
+  } catch (e) {
+    console.log('[AI] Direct parse failed, trying regex extraction...');
+  }
+
+  // 尝试从文本中提取 JSON
+  const match = cleaned.match(/\{[\s\S]*\}/);
+  if (match) {
+    try {
+      const json = JSON.parse(match[0]);
+      if (json.excuses && Array.isArray(json.excuses)) {
+        return filterUnsafeContent(json as AIResponse);
       }
+    } catch (e) {
+      console.error('[AI] Regex extraction parse failed:', (e as Error).message);
     }
   }
+
+  console.error('[AI] All parsing failed, returning fallback. Raw length:', raw.length);
 
   // 兜底：返回默认响应
   return {
