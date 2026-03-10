@@ -1,0 +1,10 @@
+[
+  { "name": "拒绝聚餐", "icon": "🍽️", "content": "有人约我去吃饭/聚餐", "defaultContext": { "channel": "wechat", "tone": "casual" }, "sortOrder": 1 },
+  { "name": "拒绝加班", "icon": "💼", "content": "领导/同事让我加班", "defaultContext": { "tone": "formal" }, "sortOrder": 2 },
+  { "name": "拒绝借钱", "icon": "💰", "content": "有人向我借钱", "defaultContext": { "tone": "casual" }, "sortOrder": 3 },
+  { "name": "拒绝帮忙", "icon": "🤝", "content": "有人请我帮忙做事", "defaultContext": { "tone": "casual" }, "sortOrder": 4 },
+  { "name": "拒绝约会", "icon": "💕", "content": "有人约我出去/相亲", "defaultContext": { "tone": "casual" }, "sortOrder": 5 },
+  { "name": "拒绝送礼", "icon": "🎁", "content": "有人给我送礼/让我收礼", "defaultContext": { "tone": "formal" }, "sortOrder": 6 },
+  { "name": "拒绝活动", "icon": "🎉", "content": "有人邀请我参加活动", "defaultContext": { "channel": "wechat", "tone": "casual" }, "sortOrder": 7 },
+  { "name": "拒绝推销", "icon": "📢", "content": "有人向我推销产品/安利东西", "defaultContext": { "tone": "casual" }, "sortOrder": 8 }
+]
