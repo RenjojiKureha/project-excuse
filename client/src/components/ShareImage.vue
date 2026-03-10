@@ -32,7 +32,7 @@ import { showToast } from 'vant';
 import StyleTag from './StyleTag.vue';
 import QrCode from './QrCode.vue';
 import { captureElement, shareImage } from '../utils/shareImage';
-import { STYLE_CONFIG, type ExcuseItem } from '../types';
+import { type ExcuseItem } from '../types';
 
 const props = defineProps<{
   excuse: ExcuseItem;
