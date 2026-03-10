@@ -1,7 +1,13 @@
 <template>
   <div class="loading-container">
-    <van-loading size="32px" color="var(--color-primary)" />
-    <p class="loading-text">{{ currentText }}</p>
+    <div class="loading-icon">
+      <div class="spinner"></div>
+    </div>
+    <div class="loading-text-wrapper">
+      <transition name="roll" mode="out-in">
+        <p class="loading-text" :key="currentIndex">{{ texts[currentIndex] }}</p>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -16,14 +22,12 @@ const texts = [
   '马上就好，再等一下下...',
 ];
 
-const currentText = ref(texts[0]);
+const currentIndex = ref(0);
 let timer: ReturnType<typeof setInterval>;
 
 onMounted(() => {
-  let i = 0;
   timer = setInterval(() => {
-    i = (i + 1) % texts.length;
-    currentText.value = texts[i];
+    currentIndex.value = (currentIndex.value + 1) % texts.length;
   }, 2000);
 });
 
@@ -36,11 +40,54 @@ onUnmounted(() => clearInterval(timer));
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 80px 20px 60px;
 }
+
+/* 自定义 spinner */
+.loading-icon {
+  margin-bottom: 24px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 文字滚动容器 */
+.loading-text-wrapper {
+  height: 24px;
+  overflow: hidden;
+  position: relative;
+}
+
 .loading-text {
-  margin-top: 16px;
   font-size: 14px;
   color: var(--color-text-secondary);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* 滚动动画：旧文字向上滑出，新文字从下方滑入 */
+.roll-enter-active,
+.roll-leave-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.roll-enter-from {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.roll-leave-to {
+  opacity: 0;
+  transform: translateY(-16px);
 }
 </style>

@@ -28,6 +28,7 @@ defineEmits<{
 </script>
 
 <style scoped>
+.excuse-list { padding: 16px; }
 .card-fade-enter-active { transition: all 0.4s ease; }
 .card-fade-leave-active { transition: all 0.3s ease; }
 .card-fade-enter-from { opacity: 0; transform: translateY(20px); }

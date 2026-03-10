@@ -9,42 +9,28 @@
         rows="3"
         autosize
         placeholder="描述你想拒绝的事..."
-        @keydown.enter.prevent="handleSubmit"
       />
     </div>
-    <van-button
-      type="primary"
-      block
-      round
-      :loading="loading"
-      :disabled="!content.trim()"
-      loading-text="生成中..."
-      @click="handleSubmit"
-    >
-      生成借口
-    </van-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const props = defineProps<{ loading: boolean }>();
-const emit = defineEmits<{ submit: [content: string] }>();
+const props = defineProps<{}>();
+const emit = defineEmits<{}>();
 
 const content = ref('');
 
-function handleSubmit() {
-  if (content.value.trim() && !props.loading) {
-    emit('submit', content.value.trim());
-  }
+function getContent(): string {
+  return content.value.trim();
 }
 
 function setContent(text: string) {
   content.value = text;
 }
 
-defineExpose({ setContent });
+defineExpose({ getContent, setContent });
 </script>
 
 <style scoped>

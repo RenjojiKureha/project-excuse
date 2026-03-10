@@ -98,7 +98,7 @@ function onShare(excuse: ExcuseItem) {
 </script>
 
 <style scoped>
-.result-page { padding: 0 16px 16px; }
+.result-page { padding: 0 ; }
 .result-actions {
   display: flex;
   gap: 12px;
