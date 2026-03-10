@@ -5,34 +5,48 @@
     <p class="excuse-tip">{{ excuse.tip }}</p>
     <div class="excuse-actions">
       <van-icon
-        name="good-job-o"
+        :name="excuse.liked === true ? 'good-job' : 'good-job-o'"
         :class="{ active: excuse.liked === true }"
-        @click="$emit('feedback', excuse.id, 'like')"
+        @click="$emit('feedback', excuse.excuseId, 'like')"
       />
       <van-icon
-        name="good-job-o"
+        :name="excuse.liked === false ? 'good-job' : 'good-job-o'"
         class="dislike-icon"
         :class="{ active: excuse.liked === false }"
-        @click="$emit('feedback', excuse.id, 'dislike')"
+        @click="$emit('feedback', excuse.excuseId, 'dislike')"
       />
       <van-icon name="description" @click="$emit('copy', excuse.content)" />
-      <van-icon name="star-o" @click="$emit('favorite', excuse)" />
+      <van-icon
+        :name="favorited ? 'star' : 'star-o'"
+        :class="{ active: favorited }"
+        @click="onFavorite"
+      />
       <van-icon name="share-o" @click="$emit('share', excuse)" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import StyleTag from './StyleTag.vue';
 import type { ExcuseItem } from '../types';
 
-defineProps<{ excuse: ExcuseItem }>();
-defineEmits<{
+const props = defineProps<{ excuse: ExcuseItem }>();
+const emit = defineEmits<{
   feedback: [id: string, action: 'like' | 'dislike'];
   copy: [text: string];
   favorite: [excuse: ExcuseItem];
   share: [excuse: ExcuseItem];
 }>();
+
+const favorited = ref(false);
+
+function onFavorite() {
+  if (!favorited.value) {
+    favorited.value = true;
+    emit('favorite', props.excuse);
+  }
+}
 </script>
 
 <style scoped>

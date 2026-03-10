@@ -2,13 +2,13 @@
   <div class="excuse-list">
     <transition-group name="card-fade">
       <ExcuseCard
-        v-for="excuse in excuses"
-        :key="excuse.id"
-        :excuse="excuse"
-        @feedback="(id: string, action: 'like' | 'dislike') => $emit('feedback', id, action)"
-        @copy="(text: string) => $emit('copy', text)"
-        @favorite="(excuse: ExcuseItem) => $emit('favorite', excuse)"
-        @share="(excuse: ExcuseItem) => $emit('share', excuse)"
+        v-for="item in excuses"
+        :key="item.excuseId"
+        :excuse="item"
+        @feedback="(id, action) => $emit('feedback', id, action)"
+        @copy="(text) => $emit('copy', text)"
+        @favorite="(exc) => $emit('favorite', exc)"
+        @share="(exc) => $emit('share', exc)"
       />
     </transition-group>
   </div>

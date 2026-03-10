@@ -2,7 +2,7 @@
   <van-overlay :show="true" @click="$emit('close')">
     <div class="share-wrapper" @click.stop>
       <!-- 被截图的卡片 -->
-      <div ref="cardRef" class="share-card" :style="{ background: bgGradient }">
+      <div ref="cardRef" class="share-card">
         <div class="share-brand">ExcuseMe 借口生成器</div>
         <div class="share-divider" />
         <StyleTag :style="excuse.style" />
@@ -44,10 +44,6 @@ const cardRef = ref<HTMLElement>();
 const saving = ref(false);
 
 const shareUrl = computed(() => window.location.origin);
-const bgGradient = computed(() => {
-  const color = STYLE_CONFIG[props.excuse.style]?.color || '#6366f1';
-  return `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`;
-});
 
 async function onSave() {
   if (!cardRef.value) return;

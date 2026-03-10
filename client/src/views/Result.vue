@@ -82,7 +82,7 @@ function onCopy(text: string) {
 
 function onFavorite(excuse: ExcuseItem) {
   historyStore.addFavorite({
-    excuseId: excuse.id,
+    excuseId: excuse.excuseId,
     requestId: excuseStore.requestId,
     style: excuse.style,
     content: excuse.content,

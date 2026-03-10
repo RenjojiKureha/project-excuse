@@ -52,7 +52,7 @@ export interface FavoriteRequest {
 export type ExcuseStyle = 'reasonable' | 'gentle' | 'humorous' | 'direct' | 'extreme' | 'reverse';
 
 export interface ExcuseItem {
-  id: string;
+  excuseId: string;
   style: ExcuseStyle;
   styleLabel: string;
   content: string;

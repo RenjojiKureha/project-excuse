@@ -19,7 +19,7 @@ export async function generateExcuses(req: GenerateRequest): Promise<{
   const excuses: ExcuseItem[] = data.excuses.map((item, index) => {
     const style = item.style as ExcuseStyle;
     return {
-      id: `exc_${uuidv4().replace(/-/g, '').slice(0, 8)}`,
+      excuseId: `exc_${uuidv4().replace(/-/g, '').slice(0, 8)}`,
       style,
       styleLabel: STYLE_MAP[style] || item.style,
       content: item.content,
@@ -37,7 +37,7 @@ export async function generateExcuses(req: GenerateRequest): Promise<{
       context: req.context || {},
     },
     results: excuses.map((e) => ({
-      excuseId: e.id,
+      excuseId: e.excuseId,
       style: e.style,
       content: e.content,
       tip: e.tip,
@@ -80,7 +80,7 @@ export async function refreshExcuses(req: RefreshRequest): Promise<{
   const excuses: ExcuseItem[] = data.excuses.map((item) => {
     const style = item.style as ExcuseStyle;
     return {
-      id: `exc_${uuidv4().replace(/-/g, '').slice(0, 8)}`,
+      excuseId: `exc_${uuidv4().replace(/-/g, '').slice(0, 8)}`,
       style,
       styleLabel: STYLE_MAP[style] || item.style,
       content: item.content,
@@ -95,7 +95,7 @@ export async function refreshExcuses(req: RefreshRequest): Promise<{
     sessionId: req.sessionId,
     input: original.input,
     results: excuses.map((e) => ({
-      excuseId: e.id,
+      excuseId: e.excuseId,
       style: e.style,
       content: e.content,
       tip: e.tip,

@@ -33,8 +33,8 @@ export const useExcuseStore = defineStore('excuse', () => {
       const res = await excuseApi.refreshExcuses(requestId.value, {
         likedStyles: liked.map((e) => e.style),
         dislikedStyles: disliked.map((e) => e.style),
-        likedIds: liked.map((e) => e.id),
-        dislikedIds: disliked.map((e) => e.id),
+        likedIds: liked.map((e) => e.excuseId),
+        dislikedIds: disliked.map((e) => e.excuseId),
       });
       requestId.value = res.data.requestId;
       excuses.value = res.data.excuses;
@@ -44,7 +44,7 @@ export const useExcuseStore = defineStore('excuse', () => {
   }
 
   async function feedback(excuseId: string, action: 'like' | 'dislike') {
-    const excuse = excuses.value.find((e) => e.id === excuseId);
+    const excuse = excuses.value.find((e) => e.excuseId === excuseId);
     if (!excuse) return;
 
     // 切换状态：再次点击取消
