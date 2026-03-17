@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: excuse-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - excuse-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: excuse-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://root:password@mongodb:27017/excuse-generator?authSource=admin
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_API_BASE_URL: ${AI_API_BASE_URL:-https://api.openai.com/v1}
+      AI_MODEL: ${AI_MODEL:-gpt-4o}
+    networks:
+      - excuse-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: excuse-client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - excuse-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  excuse-network:
+    driver: bridge
