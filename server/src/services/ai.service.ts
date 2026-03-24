@@ -15,7 +15,7 @@ export interface AICallResult {
 }
 
 export async function callAI(userPrompt: string): Promise<AICallResult> {
-  console.log('[AI] Calling model:', config.ai.model, 'at', config.ai.baseUrl);
+  // console.log('[AI] Calling model:', config.ai.model, 'at', config.ai.baseUrl);
 
   try {
     const response = await client.chat.completions.create({
@@ -28,10 +28,10 @@ export async function callAI(userPrompt: string): Promise<AICallResult> {
     });
 
     const raw = response.choices[0]?.message?.content || '';
-    console.log('[AI] Raw response (first 500 chars):', raw.substring(0, 500));
+    // console.log('[AI] Raw response (first 500 chars):', raw.substring(0, 500));
 
     const parsed = parseAIResponse(raw);
-    console.log('[AI] Parsed excuses count:', parsed.excuses.length);
+    // console.log('[AI] Parsed excuses count:', parsed.excuses.length);
 
     return {
       data: parsed,
@@ -39,8 +39,8 @@ export async function callAI(userPrompt: string): Promise<AICallResult> {
       completionTokens: response.usage?.completion_tokens || 0,
     };
   } catch (error: any) {
-    console.error('[AI] API call failed:', error.status, error.message);
-    console.error('[AI] Error details:', JSON.stringify(error.error || error.body || {}, null, 2));
+    // console.error('[AI] API call failed:', error.status, error.message);
+    // console.error('[AI] Error details:', JSON.stringify(error.error || error.body || {}, null, 2));
     throw error;
   }
 }
